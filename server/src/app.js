@@ -4,6 +4,8 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.routes.js";
 
+import fileRoutes from "./routes/file.routes.js";
+
 const app = express();
 
 app.use(
@@ -25,5 +27,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/auth", authRoutes);
+
+app.use("/api/v1/files", fileRoutes);
 
 export default app;

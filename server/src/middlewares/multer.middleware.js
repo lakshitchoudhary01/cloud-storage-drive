@@ -1,15 +1,23 @@
 import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+const tempDir = path.join(process.cwd(), "temp");
+
+if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir, { recursive: true });
+}
 
 const storage = multer.diskStorage({
-    destination: "./temp",
+    destination(req, file, cb) {
+        console.log("Multer received:", file.originalname);
 
-    filename: (req, file, cb) => {
+        cb(null, tempDir);
+    },
+
+    filename(req, file, cb) {
         cb(null, `${Date.now()}-${file.originalname}`);
     },
 });
 
-const upload = multer({
-    storage,
-});
-
-export default upload;
+export default multer({ storage });

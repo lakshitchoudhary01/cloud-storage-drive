@@ -3,25 +3,33 @@ import fs from "fs";
 
 export const uploadOnCloudinary = async (localFilePath) => {
     try {
-        if (!localFilePath) return null;
+        console.log("Local File Path:", localFilePath);
+
+        if (!localFilePath) {
+            console.log("No local file path received");
+            return null;
+        }
+
+        if (!fs.existsSync(localFilePath)) {
+            console.log("File does not exist:", localFilePath);
+            return null;
+        }
 
         const response = await cloudinary.uploader.upload(localFilePath, {
             resource_type: "auto",
             folder: "cloud-storage-drive",
         });
 
+        console.log("Upload Success:", response.secure_url);
+
         fs.unlinkSync(localFilePath);
 
         return response;
+
     } catch (error) {
-        if (localFilePath) {
-            fs.unlinkSync(localFilePath);
-        }
+        console.log("Cloudinary Error:");
+        console.log(error);
 
         return null;
     }
-};
-
-export const deleteFromCloudinary = async (publicId) => {
-    return await cloudinary.uploader.destroy(publicId);
 };
