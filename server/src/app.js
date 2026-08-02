@@ -6,6 +6,8 @@ import authRoutes from "./routes/auth.routes.js";
 import fileRoutes from "./routes/file.routes.js";
 import folderRoutes from "./routes/folder.routes.js";
 
+import dashboardRoutes from "./routes/dashboard.routes.js";
+
 const app = express();
 
 app.use(
@@ -29,5 +31,6 @@ app.get("/", (req, res) => {
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/files", fileRoutes);
 app.use("/api/v1/folders", folderRoutes);
+app.use("/api/v1/dashboard", dashboardRoutes);
 
 export default app;
