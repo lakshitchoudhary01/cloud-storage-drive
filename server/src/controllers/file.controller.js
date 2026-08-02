@@ -1,5 +1,8 @@
 import File from "../models/file.model.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import {
+    uploadOnCloudinary,
+    deleteFromCloudinary,
+} from "../utils/cloudinary.js";
 
 export const uploadFile = async (req, res) => {
     try {
@@ -62,6 +65,39 @@ export const getAllFiles = async (req, res) => {
             totalFiles: files.length,
             files,
         });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
+export const deleteFile = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const file = await File.findOne({
+            _id: id,
+            owner: req.user._id,
+        });
+
+        if (!file) {
+            return res.status(404).json({
+                success: false,
+                message: "File not found",
+            });
+        }
+
+        await deleteFromCloudinary(file.publicId);
+
+        await File.findByIdAndDelete(id);
+
+        return res.status(200).json({
+            success: true,
+            message: "File deleted successfully",
+        });
+
     } catch (error) {
         return res.status(500).json({
             success: false,

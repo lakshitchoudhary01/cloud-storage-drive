@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
     uploadFile,
     getAllFiles,
+    deleteFile,
 } from "../controllers/file.controller.js";
 import verifyJWT from "../middlewares/auth.middleware.js";
 import upload from "../middlewares/multer.middleware.js";
@@ -18,6 +19,11 @@ router.get(
     "/",
     verifyJWT,
     getAllFiles
+);
+router.delete(
+    "/:id",
+    verifyJWT,
+    deleteFile
 );
 
 export default router;
