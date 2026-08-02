@@ -41,3 +41,22 @@ export const createFolder = async (req, res) => {
         });
     }
 };
+
+export const getFolders = async (req, res) => {
+    try {
+        const folders = await Folder.find({
+            owner: req.user._id,
+        }).sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            success: true,
+            totalFolders: folders.length,
+            folders,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};

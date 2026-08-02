@@ -3,7 +3,8 @@ import {
     uploadFile,
     getAllFiles,
     deleteFile,
-    renameFile
+    renameFile,
+    downloadFile,
 } from "../controllers/file.controller.js";
 import verifyJWT from "../middlewares/auth.middleware.js";
 import upload from "../middlewares/multer.middleware.js";
@@ -31,5 +32,6 @@ router.patch(
     verifyJWT,
     renameFile
 );
+router.get("/:id/download", verifyJWT, downloadFile);
 
 export default router;

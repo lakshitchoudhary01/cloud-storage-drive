@@ -8,6 +8,12 @@ const fileSchema = new mongoose.Schema(
             required: true,
         },
 
+        folder: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Folder",
+    default: null,
+},
+
         fileName: {
             type: String,
             required: true,

@@ -6,6 +6,10 @@ import {
 
 export const uploadFile = async (req, res) => {
     try {
+        console.log("========== BODY ==========");
+console.log(req.body);
+console.log("Folder ID:", req.body.folderId);
+console.log("==========================");
         console.log("========== FILE RECEIVED ==========");
         console.log(req.file);
         console.log("===================================");
@@ -16,6 +20,7 @@ export const uploadFile = async (req, res) => {
                 message: "No file uploaded",
             });
         }
+        const folderId = req.body.folderId || null;
 
         const uploadedFile = await uploadOnCloudinary(req.file.path);
 
@@ -29,14 +34,14 @@ export const uploadFile = async (req, res) => {
         }
 
         const file = await File.create({
-            owner: req.user._id,
-            fileName: req.file.originalname,
-            publicId: uploadedFile.public_id,
-            url: uploadedFile.secure_url,
-            fileType: req.file.mimetype,
-            size: req.file.size,
-        });
-
+    owner: req.user._id,
+    folder: folderId || null,
+    fileName: req.file.originalname,
+    publicId: uploadedFile.public_id,
+    url: uploadedFile.secure_url,
+    fileType: req.file.mimetype,
+    size: req.file.size,
+});
         return res.status(201).json({
             success: true,
             message: "File uploaded successfully",
@@ -103,6 +108,35 @@ export const deleteFile = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "File deleted successfully",
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
+export const downloadFile = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const file = await File.findOne({
+            _id: id,
+            owner: req.user._id,
+        });
+
+        if (!file) {
+            return res.status(404).json({
+                success: false,
+                message: "File not found",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            downloadUrl: file.url,
         });
 
     } catch (error) {
