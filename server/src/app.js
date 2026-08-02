@@ -3,8 +3,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.routes.js";
-
 import fileRoutes from "./routes/file.routes.js";
+import folderRoutes from "./routes/folder.routes.js";
 
 const app = express();
 
@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/auth", authRoutes);
-
 app.use("/api/v1/files", fileRoutes);
+app.use("/api/v1/folders", folderRoutes);
 
 export default app;

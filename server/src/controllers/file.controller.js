@@ -89,13 +89,62 @@ export const deleteFile = async (req, res) => {
             });
         }
 
-        await deleteFromCloudinary(file.publicId);
+        const deleted = await deleteFromCloudinary(file.publicId);
 
-        await File.findByIdAndDelete(id);
+        if (!deleted) {
+        return res.status(500).json({
+        success: false,
+        message: "Unable to delete file from Cloudinary",
+    });
+}
+
+    await File.findByIdAndDelete(id);
 
         return res.status(200).json({
             success: true,
             message: "File deleted successfully",
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
+export const renameFile = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { fileName } = req.body;
+
+        if (!fileName) {
+            return res.status(400).json({
+                success: false,
+                message: "File name is required",
+            });
+        }
+
+        const file = await File.findOne({
+            _id: id,
+            owner: req.user._id,
+        });
+
+        if (!file) {
+            return res.status(404).json({
+                success: false,
+                message: "File not found",
+            });
+        }
+
+        file.fileName = fileName;
+
+        await file.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "File renamed successfully",
+            file,
         });
 
     } catch (error) {
