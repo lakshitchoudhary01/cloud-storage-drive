@@ -5,8 +5,6 @@ const api = axios.create({
     withCredentials: true,
 });
 
-export default api;
-
 // Automatically attach JWT to every request
 api.interceptors.request.use((config) => {
 
