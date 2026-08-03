@@ -11,6 +11,8 @@ import Profile from "./pages/Profile/Profile";
 import Settings from "./pages/Settings/Settings";
 import NotFound from "./pages/NotFound/NotFound";
 
+import ProtectedRoute from "./components/ProtectedRoute";
+
 function App() {
     return (
         <BrowserRouter>
@@ -23,7 +25,13 @@ function App() {
 
                 {/* Protected Layout */}
 
-                <Route element={<Layout />}>
+                <Route
+    element={
+        <ProtectedRoute>
+            <Layout />
+        </ProtectedRoute>
+    }
+>
 
                     <Route path="/" element={<Dashboard />} />
 

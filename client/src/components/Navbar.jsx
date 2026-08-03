@@ -1,8 +1,22 @@
+import { useAuth } from "../context/AuthContext";
+
 export default function Navbar() {
+
+    const { user } = useAuth();
+
     return (
         <header className="navbar">
 
-            <h3>Cloud Storage Drive</h3>
+            <div>
+
+                <h2>Dashboard</h2>
+
+                <p>
+                    Welcome back
+                    {user ? `, ${user.fullName}` : ""}
+                </p>
+
+            </div>
 
         </header>
     );

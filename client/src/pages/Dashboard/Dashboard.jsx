@@ -1,70 +1,170 @@
 import { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 import { getDashboard } from "../../services/dashboardService";
 
 export default function Dashboard() {
+
+    const { user } = useAuth();
+
     const [dashboard, setDashboard] = useState(null);
 
+    useEffect(() => {
+
+        loadDashboard();
+
+    }, []);
+
     const loadDashboard = async () => {
-        console.log("1. Loading dashboard...");
 
         try {
-            console.log("2. Calling API...");
 
             const data = await getDashboard();
 
-            console.log("3. API Response:", data);
-
             setDashboard(data);
+
         } catch (error) {
-            console.log("========== ERROR ==========");
+
             console.log(error);
 
-            if (error.response) {
-                console.log("Status:", error.response.status);
-                console.log("Data:", error.response.data);
-            }
-
-            if (error.request) {
-                console.log("Request:", error.request);
-            }
-
-            console.log("===========================");
         }
+
     };
 
-    useEffect(() => {
-        loadDashboard();
-    }, []);
-
     if (!dashboard) {
+
         return <h2>Loading...</h2>;
+
     }
 
+    const storagePercent =
+        Math.min(
+            (dashboard.storageUsed / (1024 * 1024 * 100)) * 100,
+            100
+        );
+
     return (
-        <div>
-            <h1>Dashboard</h1>
+
+        <div className="dashboard">
+
+            <h1>
+
+                Welcome back{user ? `, ${user.fullName}` : ""} 👋
+
+            </h1>
 
             <br />
 
-            <h3>Total Files : {dashboard.totalFiles}</h3>
+            <div className="dashboard-cards">
 
-            <h3>Total Folders : {dashboard.totalFolders}</h3>
+                <div className="card">
 
-            <h3>
-                Storage Used : {(dashboard.storageUsed / 1024).toFixed(2)} KB
-            </h3>
+                    <h3>Total Files</h3>
 
-            <br />
+                    <h2>{dashboard.totalFiles}</h2>
 
-            <h2>Recent Files</h2>
-
-            <br />
-
-            {dashboard.recentFiles.map((file) => (
-                <div key={file._id}>
-                    {file.fileName}
                 </div>
-            ))}
+
+                <div className="card">
+
+                    <h3>Total Folders</h3>
+
+                    <h2>{dashboard.totalFolders}</h2>
+
+                </div>
+
+                <div className="card">
+
+                    <h3>Storage Used</h3>
+
+                    <h2>
+
+                        {(dashboard.storageUsed / 1024).toFixed(2)} KB
+
+                    </h2>
+
+                </div>
+
+                <div className="card">
+
+                    <h3>Last Upload</h3>
+
+                    <h2>
+
+                        {dashboard.recentFiles.length}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+            <h2>Storage Usage</h2>
+
+            <br />
+
+            <div className="storage-bar">
+
+                <div
+                    className="storage-fill"
+                    style={{
+                        width: `${storagePercent}%`,
+                    }}
+                />
+
+            </div>
+
+            <br />
+
+            <p>
+
+                {storagePercent.toFixed(2)}% Used
+
+            </p>
+
+            <br />
+            <br />
+
+            <h2>
+
+                Recent Files
+
+            </h2>
+
+            <br />
+
+            <div className="recent-files">
+
+                {
+
+                    dashboard.recentFiles.map((file) => (
+
+                        <div
+                            key={file._id}
+                            className="file-row"
+                        >
+
+                            <span>
+
+                                📄 {file.fileName}
+
+                            </span>
+
+                            <span>
+
+                                {(file.size / 1024).toFixed(2)} KB
+
+                            </span>
+
+                        </div>
+
+                    ))
+
+                }
+
+            </div>
+
         </div>
+
     );
+
 }

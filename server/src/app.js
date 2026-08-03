@@ -12,7 +12,7 @@ const app = express();
 
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: process.env.CLIENT_URL,
         credentials: true,
     })
 );
@@ -25,6 +25,13 @@ app.get("/", (req, res) => {
     res.json({
         success: true,
         message: "Cloud Storage Drive API",
+    });
+});
+
+app.get("/health", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "Server is running",
     });
 });
 

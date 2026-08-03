@@ -188,3 +188,31 @@ export const renameFile = async (req, res) => {
         });
     }
 };
+
+export const getFilesByFolder = async (req, res) => {
+
+    try {
+
+        const { folderId } = req.params;
+
+        const files = await File.find({
+            owner: req.user._id,
+            folder: folderId,
+            isTrash: false,
+        }).sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            success: true,
+            files,
+        });
+
+    } catch (error) {
+
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+
+    }
+
+};

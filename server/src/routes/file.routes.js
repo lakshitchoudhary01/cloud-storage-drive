@@ -4,6 +4,7 @@ import {
     getAllFiles,
     deleteFile,
     renameFile,
+    getFilesByFolder,
     downloadFile,
 } from "../controllers/file.controller.js";
 import verifyJWT from "../middlewares/auth.middleware.js";
@@ -33,5 +34,7 @@ router.patch(
     renameFile
 );
 router.get("/:id/download", verifyJWT, downloadFile);
+
+router.get("/folder/:folderId", verifyJWT, getFilesByFolder);
 
 export default router;

@@ -1,10 +1,47 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { logoutUser } from "../services/authService";
 
 export default function Sidebar() {
+
+    const navigate = useNavigate();
+    const { user, setUser } = useAuth();
+
+    const handleLogout = async () => {
+
+        try {
+
+            await logoutUser();
+
+            localStorage.removeItem("token");
+
+            setUser(null);
+
+            navigate("/login");
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
     return (
+
         <aside className="sidebar">
 
-            <h2>CloudDrive</h2>
+            <div>
+
+                <h1>CloudDrive</h1>
+
+                <p className="user-email">
+
+                    {user?.email}
+
+                </p>
+
+            </div>
 
             <nav>
 
@@ -20,8 +57,14 @@ export default function Sidebar() {
 
             </nav>
 
-            <button>Logout</button>
+            <button onClick={handleLogout}>
+
+                Logout
+
+            </button>
 
         </aside>
+
     );
+
 }

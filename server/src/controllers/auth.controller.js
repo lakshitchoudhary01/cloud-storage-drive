@@ -75,10 +75,13 @@ export const loginUser = async (req, res) => {
         const token = user.generateAccessToken();
 
         const options = {
-            httpOnly: true,
-            secure: false,
-            sameSite: "lax",
-        };
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite:
+        process.env.NODE_ENV === "production"
+            ? "none"
+            : "lax",
+};
 
         return res
             .status(200)
@@ -106,4 +109,20 @@ export const getCurrentUser = async (req, res) => {
         success: true,
         user: req.user,
     });
+};
+
+export const logoutUser = async (req, res) => {
+
+    return res
+        .status(200)
+        .clearCookie("accessToken", {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+        })
+        .json({
+            success: true,
+            message: "Logged out successfully",
+        });
+
 };

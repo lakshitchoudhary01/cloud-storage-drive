@@ -1,28 +1,3 @@
-# Dependencies
-node_modules/
-
-# Environment Variables
+node_modules
 .env
-server/.env
-client/.env
-
-# Build folders
-dist/
-build/
-
-# Logs
-*.log
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Vite
-.vite
-
-# Coverage
-coverage/
-
-# IDE
-.vscode/
-*.zip
+.env.local
